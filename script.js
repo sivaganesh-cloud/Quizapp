@@ -1,20 +1,73 @@
-const questions = [
-  {
-    question: "What is HTML?",
-    answers: [
-      { text: "Programming Language", correct: false },
-      { text: "Markup Language", correct: true },
-      { text: "Database", correct: false },
-      { text: "Operating System", correct: false }
-    ]
-  },
-  {
-    question: "What does CSS stand for?",
-    answers: [
-      { text: "Cascading Style Sheets", correct: true },
-      { text: "Computer Style Sheets", correct: false },
-      { text: "Creative Style System", correct: false },
-      { text: "Colorful Style Sheets", correct: false }
-    ]
-  }
+const quizData = [
+    {
+        question: "Which language runs in a web browser?",
+        a: "Java",
+        b: "C",
+        c: "JavaScript",
+        correct: "c",
+    },
+    {
+        question: "What does CSS stand for?",
+        a: "Central Style Sheets",
+        b: "Cascading Style Sheets",
+        c: "Cars SUVs Sailboats",
+        correct: "b",
+    }
 ];
+
+const quiz = document.getElementById('quiz');
+const answerEls = document.querySelectorAll('.answer');
+const questionEl = document.getElementById('question');
+const a_text = document.getElementById('a_text');
+const b_text = document.getElementById('b_text');
+const c_text = document.getElementById('c_text');
+const submitBtn = document.getElementById('submit');
+
+let currentQuiz = 0;
+let score = 0;
+
+loadQuiz();
+
+function loadQuiz() {
+    deselectAnswers();
+    const currentQuizData = quizData[currentQuiz];
+    questionEl.innerText = currentQuizData.question;
+    a_text.innerText = currentQuizData.a;
+    b_text.innerText = currentQuizData.b;
+    c_text.innerText = currentQuizData.c;
+}
+
+function deselectAnswers() {
+    answerEls.forEach(answerEl => answerEl.checked = false);
+}
+
+function getSelected() {
+    let answer;
+    answerEls.forEach(answerEl => {
+        if(answerEl.checked) {
+            answer = answerEl.id;
+        }
+    });
+    return answer;
+}
+
+submitBtn.addEventListener('click', () => {
+    const answer = getSelected();
+    
+    if(answer) {
+        if(answer === quizData[currentQuiz].correct) {
+            score++;
+        }
+
+        currentQuiz++;
+
+        if(currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            quiz.innerHTML = `
+                <h2 style="padding: 2rem;">You answered ${score}/${quizData.length} questions correctly</h2>
+                <button onclick="location.reload()">Reload</button>
+            `;
+        }
+    }
+});
